@@ -38,7 +38,7 @@ exports.resizeUserPhoto = (req, res, next) => {
     if (!req.file) return next();
 
     req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
-
+    // to resize the photo
     sharp(req.file.buffer)
         .resize(500, 500)
         .toFormat('jpeg')

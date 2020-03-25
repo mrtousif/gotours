@@ -1,0 +1,28 @@
+//- pug is white space sensitive syntax for writing html
+html(lang="en")
+    head
+        block head
+            meta(charset="UTF-8")
+            meta(name="viewport", content="width=device-width, initial-scale=1.0")
+            title #{title} | Natours
+            link(rel="stylesheet", href="/css/style.css")
+            link(rel="shortcut icon", href="/img/favicon.png", type="image/png")
+            link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Lato:300,300i,700")
+    
+    body
+        // HEADER
+        include _header
+
+        // CONTENT
+        block content
+            h1 placeholder text
+                
+        // FOOTER
+        include _footer
+
+        //- script(src="/js/mapbox.js")
+        //- script(src="/js/login.js")
+        //- script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js")
+        script(src="/js/bundle.js")
+
+        //- script(src="/js/bundle.js.map")

@@ -16,7 +16,8 @@ const doms = {
     userPassword: document.querySelector('.form-user-password'),
     passwordCurrent: document.querySelector('#password-current'),
     passwordConfirm: document.querySelector('#password-confirm'),
-    btnSavePassword: document.querySelector('.btn--save-password')
+    btnSavePassword: document.querySelector('.btn--save-password'),
+    photo: document.querySelector('#photo')
 };
 
 if (doms.map) {
@@ -43,9 +44,12 @@ if (doms.formUserData) {
     doms.formUserData.addEventListener('submit', e => {
         e.preventDefault();
 
-        const name = doms.name.value;
-        const email = doms.email.value;
-        updateUserAccount({ name, email }, 'data');
+        const form = new FormData();
+        form.append('name', doms.name.value);
+        form.append('email', doms.email.value);
+        form.append('photo', doms.photo.files[0]);
+
+        updateUserAccount(form, 'data');
     });
 }
 

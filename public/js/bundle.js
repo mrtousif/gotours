@@ -8894,7 +8894,8 @@ var doms = {
   userPassword: document.querySelector('.form-user-password'),
   passwordCurrent: document.querySelector('#password-current'),
   passwordConfirm: document.querySelector('#password-confirm'),
-  btnSavePassword: document.querySelector('.btn--save-password')
+  btnSavePassword: document.querySelector('.btn--save-password'),
+  photo: document.querySelector('#photo')
 };
 
 if (doms.map) {
@@ -8920,12 +8921,11 @@ if (doms.logoutBtn) {
 if (doms.formUserData) {
   doms.formUserData.addEventListener('submit', function (e) {
     e.preventDefault();
-    var name = doms.name.value;
-    var email = doms.email.value;
-    (0, _updateUserAccount.updateUserAccount)({
-      name: name,
-      email: email
-    }, 'data');
+    var form = new FormData();
+    form.append('name', doms.name.value);
+    form.append('email', doms.email.value);
+    form.append('photo', doms.photo.files[0]);
+    (0, _updateUserAccount.updateUserAccount)(form, 'data');
   });
 }
 
@@ -8997,7 +8997,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "5618" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "6105" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

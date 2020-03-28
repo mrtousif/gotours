@@ -14,6 +14,8 @@ router.get('/login', authCtrl.isLoggedIn, viewCtrl.getLoginForm);
 
 router.get('/me', authCtrl.protect, viewCtrl.getAccount);
 
+router.get('/about', viewCtrl.getAbout);
+
 // for submitting form in old way
 // router.post('/submit-user-from', authCtrl.protect, viewCtrl.updateUserData);
 

@@ -18,7 +18,12 @@ router.use(authCtrl.protect);
 // and user info is loaded into req.user
 
 router.patch('/update-password', authCtrl.updatePassword);
-router.patch('/update-me', userCtrl.uploadUserPhoto, userCtrl.updateMe);
+router.patch(
+    '/update-me',
+    userCtrl.uploadUserPhoto,
+    userCtrl.resizeUserPhoto,
+    userCtrl.updateMe
+);
 
 router.patch('/deactivate-me', userCtrl.deactivateMe);
 router.delete('/delete-me', userCtrl.deleteUser);

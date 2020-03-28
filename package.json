@@ -4,8 +4,9 @@
     "description": "learning nodejs, express, mongodb",
     "main": "app.js",
     "scripts": {
-        "start": "nodemon server.js",
-        "build": "cross-env NODE_ENV=production nodemon server.js",
+        "start": "node server.js",
+        "dev:start": "nodemon server.js",
+        "dev:build": "cross-env NODE_ENV=production nodemon server.js",
         "debug": "ndb server.js",
         "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url /js",
         "build:js": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url /js"
@@ -16,6 +17,7 @@
         "@babel/polyfill": "^7.8.7",
         "axios": "^0.19.2",
         "bcrypt": "^4.0.0",
+        "compression": "^1.7.4",
         "cookie-parser": "^1.4.5",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",

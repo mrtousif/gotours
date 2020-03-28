@@ -5,14 +5,10 @@ const Tour = require('./../../models/tourModel');
 const User = require('./../../models/userModel');
 const Review = require('./../../models/reviewModel');
 
-dotenv.config({ path: './config.env' });
+dotenv.config({ path: './../../config.env' });
 
-// const DB = process.env.DATABASE.replace(
-//     '<PASSWORD>',
-//     process.env.DB_PASSWORD
-// );
+const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DB_PASSWORD);
 // const DB = process.env.LOCAL_DB;
-const DB = 'mongodb://localhost:27017/natours';
 
 mongoose
     .connect(DB, {

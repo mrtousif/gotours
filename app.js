@@ -8,6 +8,7 @@ const rateLimit = require('express-rate-limit');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -58,6 +59,7 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
+app.use(compression());
 // limit request --- DDoS protection
 const limiter = rateLimit({
     // 100 request/hour for each ip

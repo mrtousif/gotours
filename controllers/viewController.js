@@ -60,3 +60,9 @@ exports.updateUserData = catchAsync(async (req, res, next) => {
         user: updatedUser
     });
 });
+
+exports.getAbout = (req, res) => {
+    res.status(200).render('about', {
+        title: 'About Us'
+    });
+};

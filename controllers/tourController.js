@@ -3,7 +3,8 @@ const Tour = require('./../models/tourModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/AppError');
 const factory = require('./handlerFactory');
-
+const multer = require('multer'); // multi part form data
+const sharp = require('sharp');
 // const tourFilePath = `${__dirname}/../dev-data/data/tours-simple.json`;
 // const tours = JSON.parse(fs.readFileSync(tourFilePath, 'utf-8'));
 
@@ -29,6 +30,63 @@ const factory = require('./handlerFactory');
 //     }
 //     next();
 // };
+
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image')) {
+        cb(null, true);
+    } else {
+        cb(new AppError('Not an image! Please upload an image', 400), false);
+    }
+};
+
+const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter
+});
+
+exports.uploadUserPhoto = upload.fields([
+    { name: 'imageCover', maxCount: 1 },
+    { name: 'images', maxCount: 3 }
+]);
+
+// upload.array('images', 5);
+
+exports.resizeTourImages = catchAsync(async (req, res, next) => {
+    console.log(req.files);
+    if (!req.files) return next();
+    // cover image
+    if (req.files.imageCover) {
+        // set the file name
+        req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+        // to resize the photo
+        await sharp(req.files.imageCover[0].buffer)
+            .resize(2000, 1333)
+            .toFormat('jpeg')
+            .jpeg({ quality: 85 })
+            .toFile(`public/img/tours/${req.body.imageCover}`);
+    }
+    // images
+    if (req.files.images) {
+        req.body.images = [];
+        await Promise.all(
+            req.files.images.map(async (file, i) => {
+                const filename = `tour-${req.params.id}-${i + 1}.jpeg`;
+
+                await sharp(file.buffer)
+                    .resize(2000, 1333)
+                    .toFormat('jpeg')
+                    .jpeg({ quality: 85 })
+                    .toFile(`public/img/tours/${filename}`);
+
+                req.body.images.push(filename);
+            })
+        );
+    }
+
+    next();
+});
 
 // middleware
 exports.aliasTop5Tours = (req, res, next) => {

@@ -1,10 +1,10 @@
 // const fs = require('fs');
+const multer = require('multer'); // multi part form data
+const sharp = require('sharp');
 const Tour = require('./../models/tourModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/AppError');
 const factory = require('./handlerFactory');
-const multer = require('multer'); // multi part form data
-const sharp = require('sharp');
 // const tourFilePath = `${__dirname}/../dev-data/data/tours-simple.json`;
 // const tours = JSON.parse(fs.readFileSync(tourFilePath, 'utf-8'));
 

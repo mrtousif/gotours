@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 const AppError = require('./../utils/AppError');
 const catchAsync = require('./../utils/catchAsync');
-const emailer = require('./../utils/emailer');
+const Email = require('../utils/Email');
 
 const signToken = userId => {
     const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -46,7 +46,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     if (user) {
         return next(
             new AppError(
-                'An account with that email is already exist. You need to login',
+                'An account with that email is already exist. You can login or reset password.',
                 403
             )
         );
@@ -58,7 +58,10 @@ exports.signup = catchAsync(async (req, res, next) => {
         password: req.body.password,
         confirmPassword: req.body.confirmPassword
     });
-
+    // send email
+    const url = `${req.protocol}://${req.get('host')}/me`;
+    console.log(url);
+    await new Email(newUser, url).sendWelcome();
     // create new token
     // const token = signToken(newUser._id);
     // send token
@@ -198,17 +201,18 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     // deactivate validators of the user and save it to the db
     await user.save({ validateBeforeSave: false });
 
-    // create reset url
-    const resetUrl = `${req.protocol}://${req.get(
-        'host'
-    )}/api/v1/users/reset-password/${resetToken}`;
     // send it to the user's email
     try {
-        await emailer({
-            email: user.email,
-            subject: 'Password reset. Valid for 20 minutes',
-            message: `Forgot your password? \n\nTo reset your password please click the link below: \n${resetUrl} \n\nIf you suspect someone may have unauthorized access to your account, we suggest you to change your password.`
-        });
+        // create reset url
+        const resetUrl = `${req.protocol}://${req.get(
+            'host'
+        )}/api/v1/users/reset-password/${resetToken}`;
+        // await Email({
+        //     email: user.email,
+        //     subject: 'Password reset. Valid for 20 minutes',
+        //     message: `Forgot your password? \n\nTo reset your password please click the link below: \n${resetUrl} \n\nIf you suspect someone may have unauthorized access to your account, we suggest you to change your password.`
+        // });
+        await new Email(user, resetUrl).sendPasswordReset();
 
         res.status(200).json({
             status: 'success',

@@ -26,7 +26,7 @@ router.patch(
 );
 
 router.patch('/deactivate-me', userCtrl.deactivateMe);
-router.delete('/delete-me', userCtrl.deleteUser);
+router.delete('/delete-me', userCtrl.deleteMe);
 router.get('/account', userCtrl.getMe, userCtrl.getUser);
 
 // restricted to admin

@@ -46,7 +46,7 @@ const upload = multer({
     fileFilter: multerFilter
 });
 
-exports.uploadUserPhoto = upload.fields([
+exports.uploadTourPhoto = upload.fields([
     { name: 'imageCover', maxCount: 1 },
     { name: 'images', maxCount: 3 }
 ]);
@@ -54,7 +54,7 @@ exports.uploadUserPhoto = upload.fields([
 // upload.array('images', 5);
 
 exports.resizeTourImages = catchAsync(async (req, res, next) => {
-    console.log(req.files);
+    // console.log(req.files);
     if (!req.files) return next();
     // cover image
     if (req.files.imageCover) {

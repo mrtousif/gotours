@@ -207,16 +207,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
         const resetUrl = `${req.protocol}://${req.get(
             'host'
         )}/api/v1/users/reset-password/${resetToken}`;
-        // await Email({
-        //     email: user.email,
-        //     subject: 'Password reset. Valid for 20 minutes',
-        //     message: `Forgot your password? \n\nTo reset your password please click the link below: \n${resetUrl} \n\nIf you suspect someone may have unauthorized access to your account, we suggest you to change your password.`
-        // });
+
         await new Email(user, resetUrl).sendPasswordReset();
 
         res.status(200).json({
             status: 'success',
-            message: 'Reset url set to the email'
+            message: 'Reset url is sent to your email'
         });
     } catch (error) {
         user.passwordResetToken = undefined;

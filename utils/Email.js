@@ -7,27 +7,28 @@ module.exports = class Email {
         this.to = user.email;
         this.firstName = user.name.split(' ')[0];
         this.url = url;
-        this.form = `Tousif <${process.env.EMAIL_FROM}>`;
+        this.from = `Natours <${process.env.EMAIL_FROM}>`;
     }
 
     newTransport() {
         if (process.env.NODE_ENV === 'production') {
             // send grid
             return nodemailer.createTransport({
-                service: 'SendGrid',
+                host: process.env.EMAIL_SERVER,
+                port: process.env.EMAIL_PORT,
                 auth: {
-                    user: process.env.SENDGRID_USERNAME,
-                    pass: process.env.SENDGRID_PASSWORD
+                    user: process.env.EMAIL_USERNAME,
+                    pass: process.env.EMAIL_PASSWORD
                 }
             });
         }
 
         return nodemailer.createTransport({
-            host: process.env.EMAIL_HOST,
-            port: process.env.EMAIL_PORT,
+            host: process.env.TEST_EMAIL_HOST,
+            port: process.env.TEST_EMAIL_PORT,
             auth: {
-                user: process.env.EMAIL_USERNAME,
-                pass: process.env.EMAIL_PASSWORD
+                user: process.env.TEST_EMAIL_USERNAME,
+                pass: process.env.TEST_EMAIL_PASSWORD
             }
         });
     }
@@ -42,7 +43,7 @@ module.exports = class Email {
                 subject
             }
         );
-        // define email options
+        // define email message and options
         const mailOptions = {
             from: this.from,
             to: this.to,
@@ -52,6 +53,7 @@ module.exports = class Email {
                 wordwrap: 130
             })
         };
+
         // create transport and send the email
         await this.newTransport().sendMail(mailOptions);
     }
@@ -64,7 +66,7 @@ module.exports = class Email {
     async sendPasswordReset() {
         await this.send(
             'passwordReset',
-            'Password reset for your natours account valid for 20 minutes'
+            'Password reset for your Natours account valid for 20 minutes'
         );
     }
 };

@@ -13,9 +13,9 @@ dotenv.config({ path: './config.env' });
 
 const app = require('./app');
 
-// const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DB_PASSWORD);
+const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DB_PASSWORD);
 
-const DB = process.env.LOCAL_DB;
+// const DB = process.env.LOCAL_DB;
 
 mongoose
     .connect(DB, {
@@ -35,7 +35,7 @@ console.log('Current Env:', app.get('env'));
 
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () => {
-    console.log(`Running on port ${port} ....`);
+    console.log(`Server running on port ${port} ....`);
 });
 
 process.on('unhandledRejection', err => {

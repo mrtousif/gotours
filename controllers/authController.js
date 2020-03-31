@@ -60,7 +60,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     });
     // send email
     const url = `${req.protocol}://${req.get('host')}/me`;
-    console.log(url);
+
     await new Email(newUser, url).sendWelcome();
     // create new token
     // const token = signToken(newUser._id);

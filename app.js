@@ -10,11 +10,12 @@ const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 
+const errorCtrl = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
-const errorCtrl = require('./controllers/errorController');
+const bookingRouter = require('./routes/bookingRoutes');
 
 const app = express();
 
@@ -81,6 +82,7 @@ app.use('/api', limiter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
+app.use('/api/v1/bookings', bookingRouter);
 
 // entry point to the front-end
 app.use('/', viewRouter);

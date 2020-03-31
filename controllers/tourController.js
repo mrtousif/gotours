@@ -63,8 +63,8 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
         // to resize the photo
         await sharp(req.files.imageCover[0].buffer)
             .resize(2000, 1333)
-            .toFormat('jpeg')
-            .jpeg({ quality: 85 })
+            .toFormat('webp')
+            .jpeg({ quality: 80 })
             .toFile(`public/img/tours/${req.body.imageCover}`);
     }
     // images
@@ -91,7 +91,7 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
 // middleware
 exports.aliasTop5Tours = (req, res, next) => {
     req.query = {
-        sort: '-ratingsAverage,price',
+        sort: '-ratingsAverage,ratingsQuantity',
         limit: '5',
         fields: 'name,price,ratingsAverage,summary,duration,difficulty'
     };

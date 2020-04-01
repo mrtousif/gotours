@@ -63,7 +63,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(compression());
 // limit request --- DDoS protection
 const limiter = rateLimit({
-    // 100 request/hour for each ip
+    // 200 request/hour for each ip
     max: 200,
     windowMs: 60 * 60 * 1000,
     message: 'Too many request from this IP address'
@@ -88,7 +88,7 @@ app.use('/api/v1/bookings', bookingRouter);
 app.use('/', viewRouter);
 
 // fallback route
-app.all('*', (req, res, next) => {
+app.all('/api/*', (req, res, next) => {
     // const err = new Error(`${req.url} does not exist`);
     // err.statusCode = 404;
     // err.status = 'fail';
@@ -98,6 +98,11 @@ app.all('*', (req, res, next) => {
     });
 });
 
+app.all('*', (req, res, next) => {
+    res.status(404).sendFile('404.html', {
+        root: path.join(__dirname, 'public')
+    });
+});
 // global error handling middleware
 app.use(errorCtrl);
 

@@ -22,8 +22,8 @@ router.get('/login', authCtrl.isLoggedIn, viewCtrl.getLoginForm);
 router.get('/me', authCtrl.protect, viewCtrl.getAccount);
 // about us page
 router.get('/about', viewCtrl.getAbout);
-
-router.get('/my-tours', authCtrl.protect, viewCtrl.getMyTours);
+// my bookings
+router.get('/my-bookings', authCtrl.protect, viewCtrl.getMyTours);
 
 // for submitting form in old way
 // router.post('/submit-user-from', authCtrl.protect, viewCtrl.updateUserData);

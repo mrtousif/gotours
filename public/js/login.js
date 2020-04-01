@@ -22,8 +22,8 @@ export const login = async (email, password) => {
                 location.assign('/');
             }, 2000);
         }
-        // const data = await res.json();
-        console.log(res);
+
+        // console.log(res);
     } catch (error) {
         displayAlert('error', error.response.data.message);
         // console.error(error);

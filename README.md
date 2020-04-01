@@ -1,4 +1,4 @@
-# Natours Application
+# Gotours Application
 
 It's a touring e-commerce app where people can book tours.
 

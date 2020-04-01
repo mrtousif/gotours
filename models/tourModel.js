@@ -182,20 +182,17 @@ tourSchema.pre(/^findOne/, function(next) {
         path: 'reviews',
         select: ''
     });
-    // this.populate({
-    //     path: 'guides',
-    //     select: 'role name photo'
-    // });
+
     // to measure processing time
-    this.start = Date.now();
+    // this.start = Date.now();
     next();
 });
 
 // query middleware: runs after find queries(any queries starts with find)
-tourSchema.post(/^find/, function(docs, next) {
-    console.log(`Query took ${Date.now() - this.start}ms`);
-    next();
-});
+// tourSchema.post(/^find/, function(docs, next) {
+//     console.log(`Query took ${Date.now() - this.start}ms`);
+//     next();
+// });
 
 // AGGREGATE MIDDLEWARE
 // tourSchema.pre('aggregate', function(next) {

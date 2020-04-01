@@ -6,8 +6,8 @@ export const updateUserAccount = async (data, type) => {
     try {
         const url =
             type === 'password'
-                ? 'http://127.0.0.1:8000/api/v1/users/update-password'
-                : 'http://127.0.0.1:8000/api/v1/users/update-me';
+                ? '/api/v1/users/update-password'
+                : '/api/v1/users/update-me';
 
         const res = await axios({
             method: 'PATCH',
@@ -31,7 +31,7 @@ export const updateUserAccount = async (data, type) => {
 //     try {
 //         const res = await axios({
 //             method: 'PATCH',
-//             url: 'http://127.0.0.1:8000/api/v1/users/update-password',
+//             url: '/api/v1/users/update-password',
 //             data: { currentPassword, password, confirmPassword }
 //         });
 

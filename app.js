@@ -9,6 +9,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 const errorCtrl = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
@@ -24,6 +25,10 @@ app.set('views', path.join(__dirname, 'views'));
 // Global Middlewares
 // serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+// cross origin
+app.use(cors());
+app.options('api/v1/tours/:tourId', cors());
+// app.options('*', cors());
 
 // set security http headers
 app.use(helmet());

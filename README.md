@@ -1,3 +1,5 @@
+[![Build Status](https://cloud.drone.io/api/badges/CoderTousif/gotours/status.svg)](https://cloud.drone.io/CoderTousif/gotours)
+
 # Gotours Application
 
 It's a tour booking app.

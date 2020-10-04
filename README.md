@@ -1,6 +1,8 @@
+[![Build Status](https://cloud.drone.io/api/badges/CoderTousif/gotours/status.svg)](https://cloud.drone.io/CoderTousif/gotours)
+
 # Gotours Application
 
-It's a touring e-commerce app where people can book tours.
+It's a tour booking app.
 
 Check this out at https://gotours-touring-app-101.herokuapp.com/
 

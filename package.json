@@ -9,7 +9,7 @@
         "dev:build": "cross-env NODE_ENV=production nodemon server.js",
         "debug": "ndb server.js",
         "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url /js",
-        "build:js": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url /js"
+        "build": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url /js"
     },
     "author": "Tousif",
     "license": "MIT",

@@ -39,8 +39,6 @@
         "xss-clean": "^0.1.1"
     },
     "devDependencies": {
-        "@swc/cli": "^0.1.27",
-        "@swc/core": "^1.2.34",
         "cross-env": "^7.0.0",
         "eslint": "^6.8.0",
         "eslint-config-airbnb": "^18.0.1",

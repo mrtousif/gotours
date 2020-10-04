@@ -1,5 +1,5 @@
 // const fs = require('fs');
-const multer = require('multer'); // multi part form data
+const multer = require('multer'); // multipart/form-data
 const sharp = require('sharp');
 const Tour = require('./../models/tourModel');
 const catchAsync = require('./../utils/catchAsync');

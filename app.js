@@ -25,6 +25,7 @@ app.set('views', path.join(__dirname, 'views'));
 // Global Middlewares
 // serve static files
 app.use(express.static(path.join(__dirname, 'public')));
+
 // cross origin
 app.use(cors());
 // for specific origin
@@ -39,7 +40,7 @@ app.options('api/v1/tours/:tourId', cors());
 app.use(helmet());
 
 // express body parser. reads data from body into req.body
-app.use(express.json({ limit: '10kb' }));
+app.use(express.json({ limit: '100kb' }));
 
 // express body parser. reads form data encoded in the url
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
@@ -71,6 +72,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.use(compression());
+
 // limit request --- DDoS protection
 const limiter = rateLimit({
     // 200 request/hour for each ip
@@ -78,6 +80,7 @@ const limiter = rateLimit({
     windowMs: 60 * 60 * 1000,
     message: 'Too many request from this IP address'
 });
+
 app.use('/api', limiter);
 
 // custom middleware

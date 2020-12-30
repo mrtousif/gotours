@@ -2,9 +2,13 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
 dotenv.config({ path: './config.env' });
-// const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DB_PASSWORD);
+let DB;
 
-const DB = process.env.LOCAL_DB;
+if (process.env.NODE_ENV === 'development') {
+    DB = process.env.LOCAL_DB;
+} else if (process.env.NODE_ENV === 'production') {
+    DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DB_PASSWORD);
+}
 
 function connect() {
     mongoose

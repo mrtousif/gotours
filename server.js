@@ -18,7 +18,7 @@ console.log('Current Env:', app.get('env'));
 
 db.connect();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 const server = app.listen(port, () => {
     console.log(`Server running on port ${port} ....`);
 });

@@ -5,19 +5,23 @@ dotenv.config({ path: './config.env' });
 let DB;
 
 if (process.env.NODE_ENV === 'development') {
-    DB = process.env.LOCAL_DB;
+    DB = process.env.DEV_DB;
 } else if (process.env.NODE_ENV === 'production') {
     DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DB_PASSWORD);
+} else {
+    DB = process.env.TEST_DB;
 }
 
 function connect() {
+    const options = {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+        useUnifiedTopology: true
+    };
+
     mongoose
-        .connect(DB, {
-            useNewUrlParser: true,
-            useCreateIndex: true,
-            useFindAndModify: false,
-            useUnifiedTopology: true
-        })
+        .connect(DB, options)
         .then(con => {
             // console.log(con.connections);
             console.log('Database Connection successful');

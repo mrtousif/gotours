@@ -36,7 +36,7 @@ const signAndSendToken = (user, statusCode, res) => {
     // send cookie
     res.cookie('jwt', token, cookieOptions);
 
-    // user.password = undefined; when sending user data in response
+    user.password = undefined; //when sending user data in response
 
     res.status(statusCode).json({
         status: 'success',

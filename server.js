@@ -1,6 +1,6 @@
 const dotenv = require('dotenv');
 
-process.on('uncaughtException', err => {
+process.on('uncaughtException', (err) => {
     console.error('Uncaught Exception');
     console.error(err);
     console.error('Shutting Down the server...');
@@ -18,12 +18,12 @@ console.log('Current Env:', app.get('env'));
 
 db.connect();
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 5000;
 const server = app.listen(port, () => {
     console.log(`Server running on port ${port} ....`);
 });
 
-process.on('unhandledRejection', err => {
+process.on('unhandledRejection', (err) => {
     console.log('Unhandled Rejection');
     console.error(err);
     console.log('Shutting Down the server...');
@@ -35,7 +35,7 @@ process.on('unhandledRejection', err => {
     });
 });
 
-process.on('SIGTERM', err => {
+process.on('SIGTERM', (err) => {
     console.log('Sigterm Received');
     server.close(() => {
         console.log('Process terminated');

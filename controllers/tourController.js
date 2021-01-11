@@ -1,6 +1,6 @@
 // const fs = require('fs');
 const multer = require('multer'); // multipart/form-data
-const sharp = require('sharp');
+const lipo = require('lipo');
 const Tour = require('./../models/tourModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/AppError');
@@ -43,12 +43,12 @@ const multerFilter = (req, file, cb) => {
 
 const upload = multer({
     storage: multerStorage,
-    fileFilter: multerFilter
+    fileFilter: multerFilter,
 });
 
 exports.uploadTourPhoto = upload.fields([
     { name: 'imageCover', maxCount: 1 },
-    { name: 'images', maxCount: 3 }
+    { name: 'images', maxCount: 3 },
 ]);
 
 // upload.array('images', 5);
@@ -61,7 +61,7 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
         // set the file name
         req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
         // to resize the photo
-        await sharp(req.files.imageCover[0].buffer)
+        await lipo(req.files.imageCover[0].buffer)
             .resize(2000, 1333)
             .toFormat('webp')
             .jpeg({ quality: 80 })
@@ -74,7 +74,7 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
             req.files.images.map(async (file, i) => {
                 const filename = `tour-${req.params.id}-${i + 1}.jpeg`;
 
-                await sharp(file.buffer)
+                await lipo(file.buffer)
                     .resize(2000, 1333)
                     .toFormat('jpeg')
                     .jpeg({ quality: 85 })
@@ -93,7 +93,7 @@ exports.aliasTop5Tours = (req, res, next) => {
     req.query = {
         sort: '-ratingsAverage,ratingsQuantity',
         limit: '5',
-        fields: 'name,price,ratingsAverage,summary,duration,difficulty'
+        fields: 'name,price,ratingsAverage,summary,duration,difficulty',
     };
     next();
 };
@@ -124,17 +124,17 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
                 avgRating: { $avg: '$ratingsAverage' },
                 avgPrice: { $avg: '$price' },
                 minPrice: { $min: '$price' },
-                maxPrice: { $max: '$price' }
-            }
+                maxPrice: { $max: '$price' },
+            },
         },
-        { $sort: { avgPrice: 1 } } // 1 for ascending
+        { $sort: { avgPrice: 1 } }, // 1 for ascending
         // { $match: { _id: { $ne: 'EASY' } } }
     ]);
     res.status(200).json({
         status: 'success',
         data: {
-            stats
-        }
+            stats,
+        },
     });
 });
 
@@ -146,27 +146,27 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
             $match: {
                 startDates: {
                     $gte: new Date(`${year}-01-01`),
-                    $lte: new Date(`${year}-12-31`)
-                }
-            }
+                    $lte: new Date(`${year}-12-31`),
+                },
+            },
         },
         {
             $group: {
                 _id: { $month: '$startDates' },
                 numTourStarts: { $sum: 1 },
-                tours: { $push: '$name' }
-            }
+                tours: { $push: '$name' },
+            },
         },
         { $addFields: { month: '$_id' } },
         { $project: { _id: 0 } },
         { $sort: { numToursStarts: -1 } }, // -1 for descending
-        { $limit: 12 }
+        { $limit: 12 },
     ]);
     res.status(200).json({
         status: 'success',
         data: {
-            plan
-        }
+            plan,
+        },
     });
 });
 
@@ -189,13 +189,13 @@ exports.getToursWithIn = catchAsync(async (req, res, next) => {
 
     const tours = await Tour.find({
         startLocation: {
-            $geoWithin: { $centerSphere: [[longitude, latitude], radius] }
-        }
+            $geoWithin: { $centerSphere: [[longitude, latitude], radius] },
+        },
     });
     res.status(200).json({
         status: 'success',
         results: tours.length,
-        data: { tours }
+        data: { tours },
     });
 });
 
@@ -216,23 +216,23 @@ exports.getDistances = catchAsync(async (req, res, next) => {
             $geoNear: {
                 near: {
                     type: 'Point',
-                    coordinates: [longitude * 1, latitude * 1]
+                    coordinates: [longitude * 1, latitude * 1],
                 },
                 distanceField: 'distance',
-                distanceMultiplier: multiplier
-            }
+                distanceMultiplier: multiplier,
+            },
         },
         {
             $project: {
                 distance: 1,
-                name: 1
-            }
-        }
+                name: 1,
+            },
+        },
     ]);
 
     res.status(200).json({
         status: 'success',
-        data: { distances }
+        data: { distances },
     });
 });
 

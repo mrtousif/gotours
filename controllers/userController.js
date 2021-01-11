@@ -1,6 +1,6 @@
 // const fs = require('fs');
 const multer = require('multer'); // multi part form data
-const sharp = require('sharp');
+const lipo = require('lipo');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/AppError');
@@ -31,7 +31,7 @@ const multerFilter = (req, file, cb) => {
 
 const upload = multer({
     storage: multerStorage,
-    fileFilter: multerFilter
+    fileFilter: multerFilter,
 });
 
 exports.uploadUserPhoto = upload.single('photo');
@@ -42,7 +42,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
     req.file.filename = `user-${req.user.id}-${Date.now()}.webp`;
 
     // to resize the photo
-    await sharp(req.file.buffer)
+    await lipo(req.file.buffer)
         .resize(500, 500)
         .toFormat('webp')
         .jpeg({ quality: 80 })
@@ -53,7 +53,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
 
 const filterObj = (obj, ...allowedFields) => {
     const filteredObj = {};
-    Object.keys(obj).forEach(el => {
+    Object.keys(obj).forEach((el) => {
         if (allowedFields.includes(el)) {
             filteredObj[el] = obj[el];
         }
@@ -67,7 +67,7 @@ exports.getAllUsers = factory.getAll(User);
 exports.createUser = (req, res) => {
     res.status(500).json({
         status: 'error',
-        message: 'This route is not defined. Please use /signup instead.'
+        message: 'This route is not defined. Please use /signup instead.',
     });
 };
 
@@ -93,15 +93,15 @@ exports.updateMe = catchAsync(async (req, res, next) => {
         filteredBody,
         {
             new: true,
-            runValidators: true
+            runValidators: true,
         }
     );
 
     res.status(200).json({
         status: 'success',
         data: {
-            user: updatedUser
-        }
+            user: updatedUser,
+        },
     });
 });
 
@@ -109,7 +109,7 @@ exports.deactivateMe = catchAsync(async (req, res, next) => {
     await User.findByIdAndUpdate(req.user._id, { active: false });
     res.status(200).json({
         status: 'success',
-        data: null
+        data: null,
     });
 });
 
@@ -118,7 +118,7 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 
     res.status(204).json({
         status: 'success',
-        data: null
+        data: null,
     });
 });
 

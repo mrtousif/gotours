@@ -1,6 +1,7 @@
 /* eslint-disable */
 
-import '@babel/polyfill';
+// import 'core-js/stable';
+// import 'regenerator-runtime/runtime';
 import displayMap from './mapbox';
 import { login, logout } from './login';
 import { updateUserAccount } from './updateUserAccount';
@@ -19,7 +20,7 @@ const doms = {
     passwordConfirm: document.querySelector('#password-confirm'),
     btnSavePassword: document.querySelector('.btn--save-password'),
     photo: document.querySelector('#photo'),
-    bookTour: document.querySelector('#book-tour')
+    bookTour: document.querySelector('#book-tour'),
 };
 
 if (doms.map) {
@@ -28,7 +29,7 @@ if (doms.map) {
 }
 
 if (doms.formLogin) {
-    doms.formLogin.addEventListener('submit', e => {
+    doms.formLogin.addEventListener('submit', (e) => {
         e.preventDefault();
         // const email = document.getElementById('email').value;
         // const password = document.getElementById('password').value;
@@ -43,7 +44,7 @@ if (doms.logoutBtn) {
 }
 
 if (doms.formUserData) {
-    doms.formUserData.addEventListener('submit', e => {
+    doms.formUserData.addEventListener('submit', (e) => {
         e.preventDefault();
         // file upload
         const form = new FormData();
@@ -56,7 +57,7 @@ if (doms.formUserData) {
 }
 
 if (doms.userPassword) {
-    doms.userPassword.addEventListener('submit', async e => {
+    doms.userPassword.addEventListener('submit', async (e) => {
         e.preventDefault();
         doms.btnSavePassword.textContent = 'Updating...';
         const currentPassword = doms.passwordCurrent.value;
@@ -76,7 +77,7 @@ if (doms.userPassword) {
 }
 
 if (doms.bookTour) {
-    doms.bookTour.addEventListener('click', e => {
+    doms.bookTour.addEventListener('click', (e) => {
         e.target.textContent = 'Processing...';
         const { tourId } = e.target.dataset;
         bookTour(tourId);

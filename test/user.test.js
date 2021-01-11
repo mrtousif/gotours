@@ -6,19 +6,22 @@ const User = require('../models/userModel');
 // const Review = require('../models/reviewModel');
 // const Booking = require('../models/bookingModel');
 const { importData, deleteData } = require('../dev-data/data/importTestData');
-// const mongoose = require('mongoose');
-// const { MongoMemoryServer } = require('mongodb-memory-server');
-require('../server');
+const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 
 // let mongoServer;
+const mongoServer = new MongoMemoryServer();
 
 before(async () => {
     try {
-        // mongoServer = new MongoMemoryServer();
-        // const mongoUri = await mongoServer.getUri();
-
-        // await mongoose.connect(mongoUri, opts);
-        // console.log('Database connected');
+        const mongoUri = await mongoServer.getUri();
+        const port = process.env.PORT;
+        const server = app.listen(port, () => {
+            console.log(`Server running on port ${port} ....`);
+        });
+        const opts = {};
+        await mongoose.connect(mongoUri, opts);
+        console.log('Database connected');
 
         // clear database
         await deleteData();
@@ -29,17 +32,21 @@ before(async () => {
             email: 'toustif@alkon.com',
             password: '1234567890',
             confirmPassword: '1234567890',
-            role: 'admin'
+            role: 'admin',
         });
     } catch (error) {
         console.error(error);
     }
 });
 
-// after(async () => {
-// await mongoose.disconnect();
-// await mongoServer.stop();
-// });
+after(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
+    // server.close(() => {
+    //     // kill
+    //     process.exit(1);
+    // });
+});
 
 // describe('POST /notes', () => {
 //     // before(done => {
@@ -48,8 +55,8 @@ before(async () => {
 //     it('creates new notes', () => {});
 // });
 
-describe('GET /api/v1/tours', function() {
-    it('returns all tours in json', async function() {
+describe('GET /api/v1/tours', function () {
+    it('returns all tours in json', async function () {
         // request(app)
         //     .get('/api/v1/tours')
         //     .set('Accept', 'application/json')
@@ -64,13 +71,13 @@ describe('GET /api/v1/tours', function() {
     });
 });
 
-describe('POST /api/v1/users/signup', function() {
-    it('signs up a user', async function() {
+describe('POST /api/v1/users/signup', function () {
+    it('signs up a user', async function () {
         const response = await request.post('/api/v1/users/signup').send({
             name: 'Tousif',
             email: 'toustif@gotours.com',
             password: '1234567890',
-            confirmPassword: '1234567890'
+            confirmPassword: '1234567890',
         });
 
         expect(response.status).to.eql(201);
@@ -82,11 +89,11 @@ describe('POST /api/v1/users/signup', function() {
     });
 });
 
-describe('POST /api/v1/users/login', function() {
-    it('logs in a user', async function() {
+describe('POST /api/v1/users/login', function () {
+    it('logs in a user', async function () {
         const response = await request.post('/api/v1/users/login').send({
             email: 'toustif@alkon.com',
-            password: '1234567890'
+            password: '1234567890',
         });
 
         expect(response.status).to.eql(200);
@@ -98,21 +105,21 @@ describe('POST /api/v1/users/login', function() {
     });
 });
 
-describe('GET /api/v1/users/:id', function() {
-    it('should return the user of the given id', async function() {
+describe('GET /api/v1/users/:id', function () {
+    it('should return the user of the given id', async function () {
         const response = await request.get(
             '/api/v1/users/5c8a1f292f8fb814b56fa184'
         );
-        console.log(response);
+        // console.log(response);
 
         expect(response.status).to.equal(200);
     });
 });
 
-describe('GET /api/v1/users', function() {
-    it('requires admin role to access the route', async function() {
-        const response = await request.get('/api/v1/user');
-        console.log(response);
+describe('GET /api/v1/users', function () {
+    it('requires admin role to access the route', async function () {
+        const response = await request.get('/api/v1/users');
+        // console.log(response);
 
         expect(response.status).to.oneOf([403, 401]);
     });

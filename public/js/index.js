@@ -45,7 +45,7 @@ if (doms.logoutBtn) {
 if (doms.formUserData) {
     doms.formUserData.addEventListener('submit', e => {
         e.preventDefault();
-
+        // file upload
         const form = new FormData();
         form.append('name', doms.name.value);
         form.append('email', doms.email.value);

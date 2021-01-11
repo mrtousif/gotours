@@ -1,5 +1,5 @@
 // const fs = require('fs');
-const multer = require('multer'); // multi part form data. File upload
+const multer = require('multer'); // multipart/form-data
 const sharp = require('sharp');
 const Tour = require('./../models/tourModel');
 const catchAsync = require('./../utils/catchAsync');
@@ -118,7 +118,7 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
             $group: {
                 // _id: '$difficulty',
                 // _id: { $toUpper: '$difficulty' },
-                _id: null, //
+                _id: null,
                 numOfTours: { $sum: 1 }, // add 1 for each document
                 numOfRatings: { $sum: '$ratingsQuantity' },
                 avgRating: { $avg: '$ratingsAverage' },

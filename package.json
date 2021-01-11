@@ -9,7 +9,7 @@
         "test": "cross-env NODE_ENV=test PORT=4001 mocha --recursive --exit --timeout 30000",
         "dev:build": "cross-env NODE_ENV=production nodemon server.js",
         "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url /js",
-        "build:js": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url /js"
+        "build": "parcel build ./public/js/index.js --out-dir ./public/js --out-file bundle.js --public-url /js"
     },
     "author": "Tousif",
     "license": "MIT",

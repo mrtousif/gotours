@@ -27,11 +27,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // cross origin
-app.use(cors());
+// app.use(cors());
 // for specific origin
-// app.use(cors({
-//     origin: 'https://example.com'
-// }));
+app.use(
+    cors({
+        origin: 'http://localhost:3000'
+    })
+);
 
 app.options('api/v1/tours/:tourId', cors());
 // app.options('*', cors());

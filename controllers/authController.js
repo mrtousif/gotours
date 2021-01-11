@@ -6,16 +6,21 @@ const AppError = require('./../utils/AppError');
 const catchAsync = require('./../utils/catchAsync');
 const Email = require('../utils/Email');
 
-const signToken = userId => {
-    const token = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-        algorithm: 'HS256',
-        expiresIn: process.env.JWT_EXPIRES_IN // validity of the token
-    });
+const signToken = user => {
+    const token = jwt.sign(
+        { id: user._id, email: user.email, name: user.name },
+        process.env.JWT_SECRET,
+        {
+            algorithm: 'HS256',
+            expiresIn: process.env.JWT_EXPIRES_IN // validity of the token
+        }
+    );
     return token;
 };
 
-const signAndSendToken = (userId, statusCode, res) => {
-    const token = signToken(userId);
+const signAndSendToken = (user, statusCode, res) => {
+    // const { _id } = user;
+    const token = signToken(user);
     const cookieOptions = {
         expires: new Date(
             Date.now() + process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000 // 70days
@@ -26,15 +31,17 @@ const signAndSendToken = (userId, statusCode, res) => {
     if (process.env.NODE_ENV === 'production') {
         //when in production cookie will be sent only on https connection
         cookieOptions.secure = true;
+        cookieOptions.sameSite = 'lax';
     }
     // send cookie
     res.cookie('jwt', token, cookieOptions);
 
-    // user.password = undefined; when sending user data in response
+    user.password = undefined; //when sending user data in response
 
     res.status(statusCode).json({
         status: 'success',
-        token
+        token,
+        data: user
     });
 };
 
@@ -62,10 +69,9 @@ exports.signup = catchAsync(async (req, res, next) => {
     const url = `${req.protocol}://${req.get('host')}/me`;
 
     await new Email(newUser, url).sendWelcome();
-    // create new token
-    // const token = signToken(newUser._id);
+
     // send token
-    signAndSendToken(newUser._id, 201, res);
+    signAndSendToken(newUser, 201, res);
 });
 
 // Stage 1 Authentication --- Login --- check for identity
@@ -84,7 +90,7 @@ exports.login = catchAsync(async (req, res, next) => {
     }
 
     //if everything is ok then sign and send token to the client
-    signAndSendToken(user._id, 200, res);
+    signAndSendToken(user, 200, res);
 });
 
 // Stage 2 authentication --- Access to logged in user
@@ -253,7 +259,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     // user.resetTokenExpiresAt = undefined;
     user.save();
     // login the user. send JWT
-    signAndSendToken(user._id, 200, res);
+    signAndSendToken(user, 200, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -275,5 +281,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     user.confirmPassword = req.body.confirmPassword;
     await user.save();
     // issue new jwt and send it
-    signAndSendToken(user._id, 200, res);
+    signAndSendToken(user, 200, res);
 });

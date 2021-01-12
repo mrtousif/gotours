@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // for specific origin
 app.use(
     cors({
-        origin: 'https://gotours.vercel.app',
+        origin: /vercel\.app$/,
         credentials: true,
         // allowedHeaders: ['Content-Type', 'Authorization'],
         // exposedHeaders: ['Content-Range', 'X-Content-Range'],

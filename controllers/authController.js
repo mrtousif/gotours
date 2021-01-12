@@ -6,13 +6,13 @@ const AppError = require('./../utils/AppError');
 const catchAsync = require('./../utils/catchAsync');
 const Email = require('../utils/Email');
 
-const signToken = user => {
+const signToken = (user) => {
     const token = jwt.sign(
         { id: user._id, email: user.email, name: user.name },
         process.env.JWT_SECRET,
         {
             algorithm: 'HS256',
-            expiresIn: process.env.JWT_EXPIRES_IN // validity of the token
+            expiresIn: process.env.JWT_EXPIRES_IN, // validity of the token
         }
     );
     return token;
@@ -25,23 +25,23 @@ const signAndSendToken = (user, statusCode, res) => {
         expires: new Date(
             Date.now() + process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000 // 70days
         ),
-        httpOnly: true // not modifiable by the browser
+        httpOnly: true, // not modifiable by the browser
     };
     // users will be able to log in only in https connection in production
     if (process.env.NODE_ENV === 'production') {
         //when in production cookie will be sent only on https connection
         cookieOptions.secure = true;
-        cookieOptions.sameSite = 'lax';
+        // cookieOptions.sameSite = 'lax';
     }
     // send cookie
-    res.cookie('jwt', token, cookieOptions);
+    res.cookie('token', token, cookieOptions);
 
     user.password = undefined; //when sending user data in response
 
     res.status(statusCode).json({
         status: 'success',
         token,
-        data: user
+        data: user,
     });
 };
 
@@ -63,7 +63,7 @@ exports.signup = catchAsync(async (req, res, next) => {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        confirmPassword: req.body.confirmPassword
+        confirmPassword: req.body.confirmPassword,
     });
     // send email
     const url = `${req.protocol}://${req.get('host')}/me`;
@@ -97,8 +97,8 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
     // Get token and check if it exists
     let token;
-    if (req.cookies.jwt) {
-        token = req.cookies.jwt;
+    if (req.cookies.token) {
+        token = req.cookies.token;
     } else if (
         req.headers.authorization &&
         req.headers.authorization.startsWith('Bearer')
@@ -136,10 +136,10 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.isLoggedIn = async (req, res, next) => {
     try {
-        if (!req.cookies.jwt) {
+        if (!req.cookies.token) {
             return next();
         }
-        const token = req.cookies.jwt;
+        const token = req.cookies.token;
         // verify token and extract data
         const decoded = await promisify(jwt.verify)(
             token,
@@ -167,13 +167,13 @@ exports.isLoggedIn = async (req, res, next) => {
 };
 
 exports.logout = (req, res) => {
-    res.cookie('jwt', 'dummy_text', {
+    res.cookie('token', 'dummy_text', {
         expires: new Date(Date.now() + 1000), // 1second
-        httpOnly: true
+        httpOnly: true,
     });
 
     res.status(200).json({
-        status: 'success'
+        status: 'success',
     });
 };
 
@@ -218,7 +218,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
         res.status(200).json({
             status: 'success',
-            message: 'Reset url is sent to your email'
+            message: 'Reset url is sent to your email',
         });
     } catch (error) {
         user.passwordResetToken = undefined;
@@ -246,7 +246,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     // find user and check the token if it is expired
     const user = await User.findOne({
         passwordResetToken: hashedToken,
-        resetTokenExpiresAt: { $gt: Date.now() }
+        resetTokenExpiresAt: { $gt: Date.now() },
     });
     // if token has not expired, and user is valid then set new password
     if (!user) {

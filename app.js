@@ -31,7 +31,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // for specific origin
 app.use(
     cors({
-        origin: 'http://localhost:3000'
+        origin: 'https://gotours.netlify.app',
+        credentials: true,
+        // allowedHeaders: ['Content-Type', 'Authorization'],
+        // exposedHeaders: ['Content-Range', 'X-Content-Range'],
     })
 );
 
@@ -64,8 +67,8 @@ app.use(
             'maxGroupSize',
             'ratingsAverage',
             'difficulty',
-            'price'
-        ]
+            'price',
+        ],
     })
 );
 // log request info
@@ -80,16 +83,17 @@ const limiter = rateLimit({
     // 200 request/hour for each ip
     max: 200,
     windowMs: 60 * 60 * 1000,
-    message: 'Too many request from this IP address'
+    message: 'Too many request from this IP address',
 });
 
 app.use('/api', limiter);
 
 // custom middleware
 // app.use((req, res, next) => {
-// req.requestedAt = new Date().toUTCString();
-// console.log('Cookie:', req.cookies);
-// next(); // calling next middleware
+//     // console.log(req);
+//     // req.requestedAt = new Date().toUTCString();
+//     console.log('Cookie:', req.cookies);
+//     next(); // calling next middleware
 // });
 
 // router mounting
@@ -109,13 +113,13 @@ app.all('/api/*', (req, res, next) => {
     // err.status = 'fail';
     res.status(404).json({
         status: 'fail',
-        message: `${req.url} does not exist`
+        message: `${req.url} does not exist`,
     });
 });
 
 app.all('*', (req, res, next) => {
     res.status(404).sendFile('404.html', {
-        root: path.join(__dirname, 'public')
+        root: path.join(__dirname, 'public'),
     });
 });
 // global error handling middleware

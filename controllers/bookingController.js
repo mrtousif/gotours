@@ -28,19 +28,19 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
                 name: tour.name,
                 description: tour.summary,
                 images: [
-                    `https://gotours-touring-app-101.herokuapp.com/img/tours/${tour.imageCover}`
+                    `https://gotours-touring-app-101.herokuapp.com/img/tours/${tour.imageCover}`,
                 ],
                 amount: 100 * tour.price,
                 currency: 'usd',
-                quantity: 1
-            }
-        ]
+                quantity: 1,
+            },
+        ],
     });
 
     // create session and price
     res.status(200).json({
         status: 'success',
-        session
+        data: session,
     });
 });
 
@@ -53,7 +53,7 @@ exports.createBookingCheckout = catchAsync(async (req, res, next) => {
     await Booking.create({
         tour,
         user,
-        price
+        price,
     });
 
     res.redirect(req.originalUrl.split('?')[0]);

@@ -46,6 +46,8 @@ app.use(
     })
 );
 
+// app.options('/api/v1/tours', cors());
+
 // set security http headers
 app.use(helmet());
 
@@ -103,7 +105,7 @@ app.use('/api', limiter);
 
 // router mounting
 // entry point to the API
-app.use('/api/v1/tours', tourRouter);
+app.use('/api/v1/tours', cors(), tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);

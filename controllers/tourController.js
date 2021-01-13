@@ -1,6 +1,6 @@
 // const fs = require('fs');
 const multer = require('multer'); // multipart/form-data
-const lipo = require('lipo');
+const sharp = require('sharp');
 const Tour = require('./../models/tourModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/AppError');
@@ -61,7 +61,7 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
         // set the file name
         req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
         // to resize the photo
-        await lipo(req.files.imageCover[0].buffer)
+        await sharp(req.files.imageCover[0].buffer)
             .resize(2000, 1333)
             .toFormat('webp')
             .jpeg({ quality: 80 })
@@ -74,7 +74,7 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
             req.files.images.map(async (file, i) => {
                 const filename = `tour-${req.params.id}-${i + 1}.jpeg`;
 
-                await lipo(file.buffer)
+                await sharp(file.buffer)
                     .resize(2000, 1333)
                     .toFormat('jpeg')
                     .jpeg({ quality: 85 })

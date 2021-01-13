@@ -29,17 +29,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 // cross origin
 // app.use(cors());
 // for specific origin
+///vercel\.app$/
+let origin = 'http://localhost:3000';
+if (process.env.NODE_ENV === 'production') {
+    origin = /vercel\.app$/;
+} else {
+    origin = 'http://localhost:3000';
+}
+
 app.use(
     cors({
-        origin: /vercel\.app$/,
+        origin: origin,
         credentials: true,
         // allowedHeaders: ['Content-Type', 'Authorization'],
         // exposedHeaders: ['Content-Range', 'X-Content-Range'],
     })
 );
-
-app.options('api/v1/tours/:tourId', cors());
-// app.options('*', cors());
 
 // set security http headers
 app.use(helmet());

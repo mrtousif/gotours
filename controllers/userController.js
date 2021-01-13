@@ -1,6 +1,6 @@
 // const fs = require('fs');
 const multer = require('multer'); // multi part form data
-const lipo = require('lipo');
+const sharp = require('sharp');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/AppError');
@@ -40,12 +40,12 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
     if (!req.file) return next();
     // set the file name
     req.file.filename = `user-${req.user.id}-${Date.now()}.webp`;
-
+    // console.log(req.file.buffer);
     // to resize the photo
-    await lipo(req.file.buffer)
+    await sharp(req.file.buffer)
         .resize(500, 500)
         .toFormat('webp')
-        .jpeg({ quality: 80 })
+        .jpeg({ quality: 50 })
         .toFile(`public/img/users/${req.file.filename}`);
 
     next();

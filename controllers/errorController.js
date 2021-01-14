@@ -1,17 +1,17 @@
 const AppError = require('./../utils/AppError');
 
-const handleCastErrorDB = err => {
+const handleCastErrorDB = (err) => {
     const message = `Invalid ${err.path}: ${err.value}`;
     return new AppError(message, 400);
 };
 
-const handleValidationErrorDB = err => {
-    const errorMessages = Object.values(err.errors).map(el => el.message);
+const handleValidationErrorDB = (err) => {
+    const errorMessages = Object.values(err.errors).map((el) => el.message);
     const message = `Invalid input data. ${errorMessages.join('. ')}`;
     return new AppError(message, 400);
 };
 
-const handleDuplicateFieldsErrorDB = err => {
+const handleDuplicateFieldsErrorDB = (err) => {
     const message = `Duplicate field value name: ${err.keyValue.name}`;
     // const msg = err.errmsg.match(/(['"])((\\\1|.)*?)\1/gm);
     // const msg = err.errmsg.match(/"([^"]*)"/);
@@ -29,18 +29,19 @@ const handleTokenExpiredError = () => {
 
 const sendErrorDev = (err, req, res) => {
     //a) if request url starts with /api
+
     if (req.originalUrl.startsWith('/api')) {
         return res.status(err.statusCode).json({
             status: err.status,
             message: err.message,
             error: err,
-            stack: err.stack
+            stack: err.stack,
         });
     }
     //b) render error page
     res.status(err.statusCode).render('error', {
         title: 'Something went wrong',
-        message: err.message
+        message: err.message,
     });
 };
 
@@ -54,14 +55,14 @@ const sendErrorProd = (err, req, res) => {
         if (err.isOperational) {
             return res.status(err.statusCode).json({
                 status: err.status,
-                message: err.message
+                message: err.message,
             });
         }
         // programming errors or unknown errors, do not leak
         // send generic error to the client
         return res.status(500).json({
             status: 'error',
-            message: 'Something went wrong'
+            message: 'Something went wrong',
         });
     }
 
@@ -70,14 +71,14 @@ const sendErrorProd = (err, req, res) => {
     if (err.isOperational) {
         return res.status(err.statusCode).render('error', {
             title: 'Something went wrong',
-            message: err.message
+            message: err.message,
         });
     }
     // error is not operational
     // render error page with generic message
     res.status(err.statusCode).render('error', {
         title: 'Something went wrong',
-        message: 'Please try again later'
+        message: 'Please try again later',
     });
 };
 
@@ -88,10 +89,7 @@ module.exports = (err, req, res, next) => {
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
 
-    // errors for development
-    if (process.env.NODE_ENV === 'development') {
-        sendErrorDev(err, req, res);
-    } else if (process.env.NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production') {
         // errors for production
         let error = { ...err };
         error.message = err.message;
@@ -110,5 +108,8 @@ module.exports = (err, req, res, next) => {
 
         // production error
         sendErrorProd(error, req, res);
+    } else {
+        // errors for development
+        sendErrorDev(err, req, res);
     }
 };

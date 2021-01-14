@@ -3,15 +3,15 @@ const AppError = require('./../utils/AppError');
 const APIFeatures = require('./../utils/APIFeatures');
 
 // factory functions
-exports.createOne = Model =>
+exports.createOne = (Model) =>
     catchAsync(async (req, res, next) => {
         const newDoc = await Model.create(req.body);
 
         res.status(201).json({
             status: 'success',
             data: {
-                doc: newDoc
-            }
+                doc: newDoc,
+            },
         });
     });
 
@@ -30,17 +30,17 @@ exports.getOne = (Model, popOptions) =>
         res.status(200).json({
             status: 'success',
             data: {
-                doc
-            }
+                doc,
+            },
         });
     });
 
-exports.updateOne = Model =>
+exports.updateOne = (Model) =>
     catchAsync(async (req, res, next) => {
         const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             // update does not run validators by default
-            runValidators: true
+            runValidators: true,
         });
         if (!doc) {
             return next(new AppError('Invalid ID. No document found', 404));
@@ -48,12 +48,12 @@ exports.updateOne = Model =>
         res.status(200).json({
             status: 'success',
             data: {
-                doc
-            }
+                doc,
+            },
         });
     });
 
-exports.deleteOne = Model =>
+exports.deleteOne = (Model) =>
     catchAsync(async (req, res, next) => {
         const doc = await Model.findByIdAndDelete(req.params.id);
 
@@ -63,11 +63,11 @@ exports.deleteOne = Model =>
 
         res.status(204).json({
             status: 'success',
-            data: null
+            data: null,
         });
     });
 
-exports.getAll = Model =>
+exports.getAll = (Model) =>
     catchAsync(async (req, res, next) => {
         // to allow nested GET on tour(hack)
         let filter = {};
@@ -94,7 +94,7 @@ exports.getAll = Model =>
             status: 'success',
             results: docs.length,
             data: {
-                docs
-            }
+                docs,
+            },
         });
     });

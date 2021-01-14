@@ -32,10 +32,7 @@ router.get('/account', userCtrl.getMe, userCtrl.getUser);
 // restricted to admin
 router.use(authCtrl.restrictTo('admin'));
 
-router
-    .route('/')
-    .get(userCtrl.getAllUsers)
-    .post(userCtrl.createUser);
+router.route('/').get(userCtrl.getAllUsers).post(userCtrl.createUser);
 
 router
     .route('/:id')

@@ -4,29 +4,32 @@ const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 const AppError = require('./../utils/AppError');
 const catchAsync = require('./../utils/catchAsync');
-const Email = require('../utils/Email');
+// const Email = require('../utils/Email');
 
 const signToken = (user) => {
+    // console.log(process.env.JWT_SECRET);
     const token = jwt.sign(
         { id: user._id, email: user.email, name: user.name },
         process.env.JWT_SECRET,
         {
-            algorithm: 'HS256',
+            algorithm: 'HS384',
             expiresIn: process.env.JWT_EXPIRES_IN, // validity of the token
         }
     );
+
     return token;
 };
 
 const signAndSendToken = (user, statusCode, res) => {
-    // const { _id } = user;
     const token = signToken(user);
+
     const cookieOptions = {
         expires: new Date(
             Date.now() + process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000 // 70days
         ),
         httpOnly: true, // not modifiable by the browser
     };
+
     // users will be able to log in only in https connection in production
     if (process.env.NODE_ENV === 'production') {
         //when in production cookie will be sent only on https connection
@@ -58,6 +61,7 @@ exports.signup = catchAsync(async (req, res, next) => {
             )
         );
     }
+
     // load new user data into the db
     const newUser = await User.create({
         name: req.body.name,
@@ -68,7 +72,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     // send email
     const url = `${req.protocol}://${req.get('host')}/me`;
 
-    await new Email(newUser, url).sendWelcome();
+    // await new Email(newUser, url).sendWelcome();
 
     // send token
     signAndSendToken(newUser, 201, res);
@@ -96,7 +100,7 @@ exports.login = catchAsync(async (req, res, next) => {
 // Stage 2 authentication --- Access to logged in user
 exports.protect = catchAsync(async (req, res, next) => {
     // Get token and check if it exists
-    let token;
+    let token = null;
     if (req.cookies.token) {
         token = req.cookies.token;
     } else if (
@@ -106,10 +110,13 @@ exports.protect = catchAsync(async (req, res, next) => {
         // extract the token part from the string
         token = req.headers.authorization.split(' ')[1];
     }
+    // console.log('protect hit');
     // check token if it exists
     if (!token) {
+        // throw new AppError('You need to login to get access', 401);
         return next(new AppError('You need to login to get access', 401));
     }
+    console.log(token);
     // verify token and extract data
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
     //decoded{ id: '---', iat: ---, exp: --- }
@@ -181,6 +188,7 @@ exports.logout = (req, res) => {
 exports.restrictTo = (...roles) => {
     return (req, res, next) => {
         // roles = ['admin', 'lead-guide']
+        console.log('restrict hit');
         // check if current user role is in roles[]
         if (!roles.includes(req.user.role)) {
             // unauthorized

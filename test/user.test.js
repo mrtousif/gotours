@@ -77,7 +77,7 @@ describe('POST /api/v1/users/login', function () {
 });
 
 describe('POST /api/v1/users/login', function () {
-    it('logs in a user', async function () {
+    it('try to log in a user with a invalid password', async function () {
         const response = await request.post('/api/v1/users/login').send({
             email: 'toustif@alkon.com',
             password: '1234567',

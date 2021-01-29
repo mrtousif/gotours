@@ -4,7 +4,7 @@
     "description": "learning nodejs, express, mongodb",
     "main": "app.js",
     "scripts": {
-        "start": "node server.js",
+        "start": "pm2 start server.js --wait-ready",
         "dev": "nodemon server.js",
         "test": "cross-env NODE_ENV=test PORT=5000 mocha --recursive --exit --timeout 30000",
         "dev:build": "cross-env NODE_ENV=production nodemon server.js",

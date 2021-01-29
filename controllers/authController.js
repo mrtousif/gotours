@@ -39,12 +39,17 @@ const signAndSendToken = (user, statusCode, res) => {
     // send cookie
     res.cookie('token', token, cookieOptions);
 
-    user.password = undefined; //when sending user data in response
+    const { name, email, photo, _id } = user;
 
     res.status(statusCode).json({
         status: 'success',
         token,
-        data: user,
+        data: {
+            name,
+            email,
+            photo,
+            _id,
+        },
     });
 };
 

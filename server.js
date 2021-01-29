@@ -1,12 +1,12 @@
 require('dotenv').config();
 
-process.on('uncaughtException', (err) => {
-    console.error('Uncaught Exception');
-    console.error(err);
-    console.error('Shutting Down the server...');
-    // kill
-    process.exit(1);
-});
+// process.on('uncaughtException', (err) => {
+//     console.error('Uncaught Exception');
+//     console.error(err);
+//     console.error('Shutting Down the server...');
+//     // kill
+//     process.exit(1);
+// });
 
 const app = require('./app');
 const db = require('./db');
@@ -35,6 +35,14 @@ process.on('unhandledRejection', (err) => {
 
 process.on('SIGTERM', (err) => {
     console.log('Sigterm Received');
+    server.close(() => {
+        console.log('Process terminated');
+    });
+});
+
+process.on('SIGINT', function () {
+    console.log('SIGINT Received');
+    db.close();
     server.close(() => {
         console.log('Process terminated');
     });

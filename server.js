@@ -35,6 +35,7 @@ process.on('unhandledRejection', (err) => {
 
 process.on('SIGTERM', (err) => {
     console.log('Sigterm Received');
+    db.close();
     server.close(() => {
         console.log('Process terminated');
     });

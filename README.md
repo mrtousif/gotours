@@ -1,4 +1,4 @@
-# Natours -- tour booking app.
+# Gotours -- tour booking app.
 
 Checkout at https://gotours.vercel.app
 
